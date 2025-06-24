@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario Bimestral</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos personalizados para la paleta de colores y la fuente especificada */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ECEFF0; /* Blanco anti-flash */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 10px; /* Reducido para pantallas pequeñas */
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #FFFFFF; /* Fondo blanco para el formulario */
+            border-radius: 1.5rem; /* Esquinas redondeadas */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+            padding: 1.5rem; /* Reducido para móviles */
+            max-width: 100%; /* Ajustado para abarcar todo el ancho del móvil */
+            width: 100%; /* Ajustado para abarcar todo el ancho del móvil */
+            transition: all 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Ajustes responsivos para pantallas más grandes */
+        @media (min-width: 640px) { /* Pantallas pequeñas y superiores */
+            body {
+                padding: 20px; /* Restaurar padding para desktop */
+            }
+            .container {
+                padding: 3rem; /* Restaurar padding para desktop */
+                max-width: 90%; /* Restaurar max-width para desktop */
+                width: 800px; /* Restaurar width para desktop */
+            }
+        }
+
+        .gradient-button {
+            background-image: linear-gradient(to right, #28418B, #009BCF); /* Azul Marian a Verde Azulado */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem; /* Esquinas redondeadas */
+            font-weight: 600;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .gradient-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0.9;
+        }
+        .gradient-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background-image: linear-gradient(to right, #BABBBB, #BABBBB); /* Plateado para deshabilitado */
+        }
+        .input-field {
+            border-radius: 0.5rem;
+            border: 1px solid #BABBBB; /* Borde plateado */
+            padding: 0.75rem 1rem;
+            width: 100%;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.2s;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #009BCF; /* Verde Azulado al enfocar */
+            box-shadow: 0 0 0 3px rgba(0, 155, 207, 0.2); /* Anillo de enfoque suave */
+        }
+        .label-text {
+            font-weight: 600;
+            color: #28418B; /* Azul Marian */
+            margin-bottom: 0.75rem; /* Increased space below the label */
+            display: block;
+        }
+        .error-message {
+            color: #DC2626; /* Rojo para errores */
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+        .success-message {
+            color: #16A34A; /* Verde para éxito */
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        .summary-box {
+            background-color: #FFFFFF; /* Fondo blanco para el resumen */
+            border-radius: 1.5rem; /* Esquinas redondeadas */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+            padding: 1.5rem; /* Reducido para móviles */
+        }
+        
+        /* Estilos para la página de inicio */
+        #intro-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 100vh;
+            width: 100%;
+            background-color: #ECEFF0;
+            padding: 20px;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        #intro-page .logo {
+            max-width: 250px;
+            height: auto;
+            margin-bottom: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        #intro-page h1 {
+            color: #28418B;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        #intro-page h2 {
+            color: #5B6384;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2.5rem;
+        }
+        #intro-page .start-button {
+            background-image: linear-gradient(to right, #28418B, #009BCF);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+        #intro-page .start-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            opacity: 0.95;
+        }
+
+        /* Estilos para el botón de la cámara */
+        .camera-button {
+            background-color: #5B6384;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .camera-button:hover {
+            background-color: #4A516E;
+        }
+        .file-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        /* Estilos para prevenir el desbordamiento del nombre del archivo */
+        .file-input-wrapper .file-name-span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1; /* Permite que el span ocupe el espacio restante */
+            min-width: 0; /* Necesario para que flex-grow funcione correctamente con overflow: hidden */
+            display: inline-block;
+        }
+
+        /* Modal para mensajes de confirmación */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #FFFFFF; /* Fondo blanco */
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #28418B; /* Borde azul del botón */
+            width: 80%;
+            max-width: 500px;
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+        }
+        .modal-content h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #28418B;
+            margin-bottom: 1rem;
+        }
+        .modal-content p {
+            font-size: 1rem;
+            color: #5B6384;
+            margin-bottom: 1.5rem;
+        }
+        #modalExistence { /* Estilo para el número de existencia en el modal */ 
+            color: #28418B;
+            font-size: 3rem;
+            font-weight: bold;
+            margin-top: 2rem; 
+            margin-bottom: 2rem; 
+        }
+        .modal-footer {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        /* Estilos específicos para el modal de éxito */
+        .modal-success {
+            background-color: #FFFFFF;
+            border-color: #28418B; 
+        }
+        /* Estilos específicos para el modal de error */
+        .modal-error {
+            background-color: #FEF2F2;
+            border-color: #EF4444; 
+        }
+
+        /* Nuevos estilos para la pantalla de resumen mejorada */
+        .summary-category-section {
+            background-color: #F8FAFC; /* Fondo ligeramente más claro para las secciones */
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            border: 1px solid #E2E8F0;
+            margin-bottom: 1.5rem;
+        }
+        .summary-category-section:last-child {
+            margin-bottom: 0;
+        }
+        .summary-category-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #28418B;
+            text-align: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #D1D5DB;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Una columna por defecto en móviles */
+            gap: 0.75rem;
+        }
+        @media (min-width: 640px) { /* Dos columnas en pantallas más grandes */
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .summary-grid-item {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0;
+            /* Se ha eliminado justify-content: space-between para la alineación a la izquierda */
+        }
+
+        .summary-grid-item .label {
+            font-weight: 500;
+            color: #5B6384;
+            margin-right: 0.5rem; /* Espacio entre etiqueta y valor */
+            flex-shrink: 0;
+        }
+        .summary-grid-item .value {
+            color: #28418B;
+            /* text-align: left; ya no es necesario aquí si flex-start se usa en el padre y flex-grow en el valor */
+            flex-grow: 1; /* Permite que el valor ocupe el espacio restante */
+            word-break: break-word;
+        }
+
+        /* Estilo para el elemento "Nombre de Delegado" para que abarque todo el ancho y esté alineado a la izquierda */
+        .summary-delegado-full-width {
+            grid-column: 1 / -1; /* Ocupa todas las columnas en la cuadrícula */
+            justify-content: flex-start; /* Alinea el contenido a la izquierda */
+        }
+        .summary-delegado-full-width .value {
+            font-weight: 600; /* Para que se destaque un poco más */
+        }
+
+        /* Estilo para los totales resaltados dentro de la cuadrícula */
+        .summary-grid-item.highlight-total {
+            grid-column: 1 / -1; /* Ocupa todo el ancho en la cuadrícula */
+            text-align: center;
+            background-color: #E0F2F7;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column; /* Apila etiqueta y valor para el total */
+            align-items: center;
+        }
+        .summary-grid-item.highlight-total .label {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #009BCF;
+            margin-bottom: 0.25rem;
+            margin-right: 0; /* Anula el margen derecho predeterminado para el apilamiento */
+        }
+        .summary-grid-item.highlight-total .value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #009BCF;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Página de Inicio -->
+    <div id="intro-page" class="w-full">
+        <img src="https://github.com/juanbls100/forms_connect_googlesheets/blob/main/Your%20paragraph%20text%20(8).png?raw=true" alt="SIF Logo" class="logo">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-blue-900 mb-4">Inventario bimestral de urnas y mamparas</h1>
+        <h2 id="introSubtitle" class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-700 mb-8">Sindicato financiero</h2>
+        <button id="startButton" class="start-button">Comenzar Captura</button>
+    </div>
+
+    <!-- Contenedor del Formulario Principal (inicialmente oculto) -->
+    <div id="form-container" class="container hidden">
+        <h1 class="text-3xl font-bold text-center text-[#28418B] mb-2 sm:text-4xl">Inventario bimestral de urnas y mamparas</h1>
+        <h2 id="dynamicSubtitle" class="text-xl font-bold text-center text-[#5B6384] mb-6 sm:text-2xl">Sindicato financiero</h2>
+
+        <form id="inventoryForm" class="space-y-6">
+            <!-- Sección 1 del Formulario (Datos del Trabajador) -->
+            <div id="form-section-1">
+                <!-- Bimestre -->
+                <div>
+                    <label for="bimestre" class="label-text">Bimestre</label>
+                    <select id="bimestre" name="Bimestre" class="input-field" required>
+                        <option value="">Selecciona un bimestre</option>
+                        <option value="Ene - Feb">Ene - Feb</option>
+                        <option value="Mar - Abr">Mar - Abr</option>
+                        <option value="May - Jun">May - Jun</option>
+                        <option value="Jul - Ago">Jul - Ago</option>
+                        <option value="Sep - Oct">Sep - Oct</option>
+                        <option value="Nov - Dic">Nov - Dic</option>
+                    </select>
+                </div>
+                
+                <!-- Fecha de inventario -->
+                <div>
+                    <label for="fechaInventario" class="label-text">Fecha de inventario</label>
+                    <input type="date" id="fechaInventario" name="Fecha de inventario" class="input-field" required>
+                </div>
+
+                <div>
+                    <label for="region" class="label-text">Región</label>
+                    <select id="region" name="Región" class="input-field" required>
+                        <option value="">Cargando regiones...</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="empresa" class="label-text">Empresa</label>
+                    <select id="empresa" name="Empresa" class="input-field" required>
+                        <option value="">Cargando empresas...</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="nombreDelegado" class="label-text">Nombre de Delegado</label>
+                    <select id="nombreDelegado" name="Nombre de Delegado" class="input-field" required>
+                        <option value="">Cargando delegados...</option>
+                    </select>
+                </div>
+                
+                <span id="section1ErrorMessage" class="error-message hidden text-center">Por favor, completa todos los campos de esta sección antes de continuar.</span>
+                <div class="flex justify-between mt-6">
+                    <button type="button" id="backButtonSection1" class="w-1/2 gradient-button bg-[#5B6384] mr-2">Atrás</button>
+                    <button type="button" id="nextButton" class="w-1/2 gradient-button ml-2">Siguiente</button>
+                </div>
+            </div>
+
+            <!-- Sección 2 del Formulario (Campos Numéricos y Fotos de Urnas, y Opcional de Mamparas) -->
+            <div id="form-section-2" class="hidden">
+                <!-- Inventario de Urnas -->
+                <div>
+                    <label for="totalUrnas" class="label-text">Total de urnas (Inventario Inicial)</label>
+                    <input type="number" id="totalUrnas" name="Total de urnas" class="input-field" min="0" required disabled>
+                    <p id="loadingUrnas" class="text-sm text-gray-500 hidden">Cargando...</p>
+                </div>
+                <div>
+                    <label for="urnasDañadas" class="label-text">Urnas dañadas y/o incompletas</label>
+                    <input type="number" id="urnasDañadas" name="Urnas dañadas y/o incompletas" placeholder="Ingrese urnas dañadas" class="input-field" min="0" required>
+                </div>
+                <div>
+                    <label for="traspasosRecibidos" class="label-text">Traspasos recibidos</label>
+                    <input type="number" id="traspasosRecibidos" name="Traspasos recibidos" placeholder="Ingrese traspasos recibidos" class="input-field" min="0" required>
+                </div>
+                <div>
+                    <label for="traspasosRealizados" class="label-text">Traspasos realizados</label>
+                    <input type="number" id="traspasosRealizados" name="Traspasos realizados" placeholder="Ingrese traspasos realizados" class="input-field" min="0" required>
+                </div>
+                <div>
+                    <label for="urnasExtraviadas" class="label-text">Urnas extravíadas</label>
+                    <input type="number" id="urnasExtraviadas" name="Urnas extravíadas" placeholder="Ingrese urnas extravíadas" class="input-field" min="0" required>
+                </div>
+                <div>
+                    <label for="urnasRecuperadas" class="label-text">Urnas recuperadas</label>
+                    <input type="number" id="urnasRecuperadas" name="Urnas recuperadas" placeholder="Ingrese urnas recuperadas" class="input-field" min="0" required>
+                </div>
+                <div>
+                    <label for="nuevasEntradas" class="label-text">Nuevas entradas</label>
+                    <input type="number" id="nuevasEntradas" name="Nuevas entradas" placeholder="Ingrese nuevas entradas" class="input-field" min="0" required>
+                </div>
+
+                <div class="mt-8 p-4 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0] shadow-sm">
+                    <label class="label-text text-lg block mb-2 text-center">La existencia actual disponible (Urnas):</label>
+                    <p id="existenciaActualUrnas" class="text-2xl font-bold text-[#009BCF] text-center">0</p>
+                </div>
+
+                <!-- Sección de Inventario de Mamparas (oculta por defecto) -->
+                <div id="mamparasSection" class="hidden mt-8 p-4 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0] shadow-sm">
+                    <h3 class="text-xl font-bold text-[#28418B] mb-4 text-center">Inventario de Mamparas</h3>
+                    <div>
+                        <label for="mamparasInicial" class="label-text">Inventario inicial (Mamparas)</label>
+                        <input type="number" id="mamparasInicial" name="Mamparas - Inventario inicial" class="input-field" min="0" disabled>
+                        <p id="loadingMamparas" class="text-sm text-gray-500 hidden">Cargando...</p>
+                    </div>
+                    <div>
+                        <label for="mamparasExtraviadas" class="label-text">Extraviadas</label>
+                        <input type="number" id="mamparasExtraviadas" name="Mamparas - Extraviadas" placeholder="Ingrese mamparas extraviadas" class="input-field" min="0">
+                    </div>
+                    <div>
+                        <label for="mamparasDañadas" class="label-text">Dañadas e incompletas</label>
+                        <input type="number" id="mamparasDañadas" name="Mamparas - Dañadas e incompletas" placeholder="Ingrese mamparas dañadas e incompletas" class="input-field" min="0">
+                    </div>
+                    <div class="mt-4 p-4 bg-white rounded-xl border border-[#E2E8F0] shadow-sm">
+                        <label class="label-text text-lg block mb-2 text-center">Total disponible (Mamparas):</label>
+                        <p id="totalDisponibleMamparas" class="text-2xl font-bold text-[#009BCF] text-center">0</p>
+                    </div>
+                </div>
+
+                <!-- Secciones de Carga de Archivos -->
+                <div>
+                    <label class="label-text">Portada de urnas y mamparas</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="portadaUrnas" name="Portada de urnas y mamparas (Archivo)" accept="image/*" capture="environment" class="hidden">
+                        <button type="button" id="openPortadaUrnasCamera" class="camera-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-camera">
+                                <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+                                <circle cx="12" cy="13" r="3"/>
+                            </svg>
+                            Cargar archivo
+                        </button>
+                        <span id="portadaUrnasFileName" class="text-sm text-gray-600 file-name-span">No se ha seleccionado archivo.</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="label-text">Foto de Urnas y mamparas</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="fotoUrnas" name="Foto de Urnas y mamparas (Archivo)" accept="image/*" capture="environment" class="hidden">
+                        <button type="button" id="openFotoUrnasCamera" class="camera-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-camera">
+                                <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+                                <circle cx="12" cy="13" r="3"/>
+                            </svg>
+                            Cargar archivo
+                        </button>
+                        <span id="fotoUrnasFileName" class="text-sm text-gray-600 file-name-span">No se ha seleccionado archivo.</span>
+                    </div>
+                </div>
+
+                <div id="urlError" class="error-message hidden text-center">
+                    Error: La URL de Google Apps Script no ha sido configurada. Por favor, reemplaza 'PEGA_TU_URL_DE_APLICACION_WEB_AQUI' en el código JavaScript.
+                </div>
+                
+                <div class="flex justify-between mt-6">
+                    <button type="button" id="backButtonSection2" class="w-1/2 gradient-button bg-[#5B6384] mr-2">Atrás</button>
+                    <button type="button" id="nextButtonSection2" class="w-1/2 gradient-button ml-2">Siguiente</button>
+                </div>
+            </div>
+
+            <div id="responseMessage" class="hidden"></div>
+        </form>
+
+        <!-- Sección de Resumen y Guardado Final (inicialmente oculta) -->
+        <div id="summarySection" class="summary-box hidden">
+            <h3 class="text-xl font-bold text-[#28418B] text-center mb-4">Resumen de Datos Capturados</h3>
+            <div id="summaryContent">
+                </div>
+            <div class="flex justify-between mt-6">
+                <button type="button" id="modifyDataButton" class="w-1/2 gradient-button bg-[#5B6384] mr-2">Modificar Datos</button>
+                <button type="button" id="saveDataButton" class="w-1/2 gradient-button ml-2">Guardar datos</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación -->
+    <div id="confirmationModal" class="modal">
+        <div id="modalContent" class="modal-content">
+            <h3 id="modalTitle"></h3>
+            <p id="modalMessage"></p>
+            <div id="modalExistence" class="text-5xl font-bold hidden" style="color: #28418B; margin-top: 2rem; margin-bottom: 2rem;"></div>
+            <div class="modal-footer">
+                <button id="modalOkButton" class="gradient-button">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // IMPORTANT: Replace with the actual URL of your Google Apps Script
+        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzRsNOCe3h_rrnMD0zkqdn6OFxYjOSUooBvCzIuAqWd5trAL9er3y5nkbRZNiOOGHTu/exec'; 
+
+        const introPage = document.getElementById('intro-page');
+        const introSubtitle = document.getElementById('introSubtitle'); 
+        const startButton = document.getElementById('startButton');
+        const formContainer = document.getElementById('form-container');
+        const dynamicSubtitle = document.getElementById('dynamicSubtitle');
+        const inventoryForm = document.getElementById('inventoryForm');
+        const urlError = document.getElementById('urlError');
+        const responseMessage = document.getElementById('responseMessage');
+        const existenciaActualUrnasDisplay = document.getElementById('existenciaActualUrnas'); 
+        const summarySection = document.getElementById('summarySection');
+        const summaryContent = document.getElementById('summaryContent');
+        const saveDataButton = document.getElementById('saveDataButton'); 
+        const modifyDataButton = document.getElementById('modifyDataButton'); 
+
+        // Elements for multi-section form
+        const formSection1 = document.getElementById('form-section-1');
+        const formSection2 = document.getElementById('form-section-2');
+        const nextButtonSection1 = document.getElementById('nextButton'); 
+        const backButtonSection1 = document.getElementById('backButtonSection1'); 
+        const backButtonSection2 = document.getElementById('backButtonSection2'); 
+        const nextButtonSection2 = document.getElementById('nextButtonSection2'); 
+        const section1ErrorMessage = document.getElementById('section1ErrorMessage');
+
+        // File input elements and camera button
+        const bimestreInput = document.getElementById('bimestre'); 
+        const portadaUrnasInput = document.getElementById('portadaUrnas');
+        const openPortadaUrnasCameraButton = document.getElementById('openPortadaUrnasCamera');
+        const portadaUrnasFileNameSpan = document.getElementById('portadaUrnasFileName');
+
+        const fotoUrnasInput = document.getElementById('fotoUrnas');
+        const openFotoUrnasCameraButton = document.getElementById('openFotoUrnasCamera');
+        const fotoUrnasFileNameSpan = document.getElementById('fotoUrnasFileName');
+
+        // Modal elements
+        const confirmationModal = document.getElementById('confirmationModal');
+        const modalContent = document.getElementById('modalContent'); 
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalExistence = document.getElementById('modalExistence'); 
+        const modalOkButton = document.getElementById('modalOkButton');
+
+        // New Mamparas section elements
+        const mamparasSection = document.getElementById('mamparasSection');
+        const mamparasInicialInput = document.getElementById('mamparasInicial');
+        const mamparasExtraviadasInput = document.getElementById('mamparasExtraviadas');
+        const mamparasDañadasInput = document.getElementById('mamparasDañadas');
+        const totalDisponibleMamparasDisplay = document.getElementById('totalDisponibleMamparas');
+        const empresaSelect = document.getElementById('empresa'); 
+        const regionSelect = document.getElementById('region'); 
+        const nombreDelegadoSelect = document.getElementById('nombreDelegado');
+
+
+        // Initial inventory fields
+        const totalUrnasInput = document.getElementById('totalUrnas'); 
+        const loadingUrnas = document.getElementById('loadingUrnas');
+        const loadingMamparas = document.getElementById('loadingMamparas');
+
+        // Global variables to store all form data before final submission, including Base64 image data
+        let allFormData = {};
+        let portadaUrnasBase64 = '';
+        let fotoUrnasBase64 = '';
+
+
+        /**
+         * Reads a file as a Base64 string.
+         * @param {File} file - The file to read.
+         * @param {function(string): void} callback - The callback function to receive the Base64 string.
+         */
+        function readFileAsBase64(file, callback) {
+            if (!file) {
+                callback('');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                callback(event.target.result); // result will be a data URL (Base64)
+            };
+            reader.onerror = function(event) {
+                console.error("Error reading file:", event.target.error);
+                callback(''); // Return empty string on error
+            };
+            reader.readAsDataURL(file);
+        }
+
+        /**
+         * Displays a confirmation modal with a title, message, and type.
+         * @param {string} title - The title of the modal.
+         * @param {string} message - The message to display in the modal.
+         * @param {string} type - 'success', 'error', or any other (default 'info').
+         */
+        function showModal(title, message, type = 'info') { 
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modalExistence.textContent = ''; 
+            modalExistence.classList.add('hidden'); 
+
+            modalContent.classList.remove('modal-success', 'modal-error');
+            modalContent.style.borderColor = '#28418B'; 
+
+            if (type === 'success') {
+                modalContent.classList.add('modal-success');
+            } else if (type === 'error') {
+                modalContent.classList.add('modal-error');
+            }
+
+            confirmationModal.style.display = 'flex'; 
+        }
+
+        // Close modal when "Accept" button is clicked
+        modalOkButton.addEventListener('click', () => {
+            confirmationModal.style.display = 'none';
+        });
+
+        /**
+         * Checks if the Google Apps Script URL is configured correctly
+         * and enables/disables the submit button as needed.
+         */
+        function checkUrlAndButton() {
+            if (GOOGLE_APPS_SCRIPT_URL === 'PEGA_TU_URL_DE_APLICACION_WEB_AQUI' || !GOOGLE_APPS_SCRIPT_URL.startsWith('http')) {
+                saveDataButton.disabled = true; 
+                urlError.classList.remove('hidden');
+                console.error("Error: Google Apps Script URL has not been configured or is invalid. Please replace 'PEGA_TU_URL_DE_APLICACION_WEB_AQUI' with the URL of your Apps Script deployment.");
+            } else {
+                saveDataButton.disabled = false; 
+                urlError.classList.add('hidden');
+            }
+        }
+
+        /**
+         * Calculates and updates the "Current available existence" value for urns.
+         */
+        function calculateExistenciaActualUrnas() {
+            const totalUrnas = parseInt(totalUrnasInput.value) || 0; 
+            const urnasDañadas = parseInt(document.getElementById('urnasDañadas').value) || 0;
+            const traspasosRecibidos = parseInt(document.getElementById('traspasosRecibidos').value) || 0;
+            const traspasosRealizados = parseInt(document.getElementById('traspasosRealizados').value) || 0;
+            const urnasExtraviadas = parseInt(document.getElementById('urnasExtraviadas').value) || 0;
+            const urnasRecuperadas = parseInt(document.getElementById('urnasRecuperadas').value) || 0;
+            const nuevasEntradas = parseInt(document.getElementById('nuevasEntradas').value) || 0;
+
+            const existencia = totalUrnas - urnasDañadas + traspasosRecibidos - traspasosRealizados - urnasExtraviadas + urnasRecuperadas + nuevasEntradas;
+            existenciaActualUrnasDisplay.textContent = existencia;
+        }
+
+        /**
+         * Calculates and updates the "Total available" value for partitions.
+         */
+        function calculateTotalDisponibleMamparas() {
+            const mamparasInicial = parseInt(mamparasInicialInput.value) || 0;
+            const mamparasExtraviadas = parseInt(mamparasExtraviadasInput.value) || 0;
+            const mamparasDañadas = parseInt(mamparasDañadasInput.value) || 0;
+
+            const totalDisponible = mamparasInicial - mamparasExtraviadas - mamparasDañadas;
+            totalDisponibleMamparasDisplay.textContent = totalDisponible;
+        }
+
+        // Add event listeners to all numeric urn input fields for real-time calculation
+        document.querySelectorAll('#form-section-2 input[type="number"]:not([id^="mamparas"])').forEach(input => {
+            input.addEventListener('input', calculateExistenciaActualUrnas);
+        });
+
+        // Add event listeners to partition fields for real-time calculation
+        mamparasInicialInput.addEventListener('input', calculateTotalDisponibleMamparas);
+        mamparasExtraviadasInput.addEventListener('input', calculateTotalDisponibleMamparas);
+        mamparasDañadasInput.addEventListener('input', calculateTotalDisponibleMamparas);
+
+        /**
+         * Fetches initial inventory data based on selected company and region.
+         */
+        async function fetchInitialInventory() {
+            const empresa = empresaSelect.value;
+            const region = regionSelect.value;
+
+            // Only fetch if both are selected
+            if (empresa && region) {
+                loadingUrnas.classList.remove('hidden');
+                totalUrnasInput.value = ''; // Clear previous value
+                loadingMamparas.classList.remove('hidden');
+                mamparasInicialInput.value = ''; // Clear previous value
+
+                try {
+                    // Construct the URL for the Apps Script doGet function
+                    const fetchUrl = `${GOOGLE_APPS_SCRIPT_URL}?type=inventory&empresa=${encodeURIComponent(empresa)}&region=${encodeURIComponent(region)}`;
+                    
+                    const response = await fetch(fetchUrl);
+                    const result = await response.json();
+
+                    if (result.status === 'success' && result.data) {
+                        totalUrnasInput.value = result.data.inventarioInicialUrnas;
+                        mamparasInicialInput.value = result.data.inventarioInicialMamparas;
+                    } else {
+                        console.error('Error fetching initial inventory:', result.message);
+                        showModal('Error de Carga', 'No se pudieron cargar los datos de inventario inicial para la empresa/región seleccionada. Se establecerán en 0.', 'error');
+                        totalUrnasInput.value = 0;
+                        mamparasInicialInput.value = 0;
+                    }
+                } catch (error) {
+                    console.error('Network error fetching initial inventory:', error);
+                    showModal('Error de Red', 'No se pudo conectar para cargar los datos de inventario inicial. Asegúrate de tener conexión a internet. Se establecerán en 0.', 'error');
+                    totalUrnasInput.value = 0;
+                    mamparasInicialInput.value = 0;
+                } finally {
+                    loadingUrnas.classList.add('hidden');
+                    loadingMamparas.classList.add('hidden');
+                    calculateExistenciaActualUrnas(); // Recalculate based on new initial value
+                    calculateTotalDisponibleMamparas(); // Recalculate based on new initial value
+                }
+            } else {
+                // If either is not selected, clear values and set to 0
+                totalUrnasInput.value = 0;
+                mamparasInicialInput.value = 0;
+                calculateExistenciaActualUrnas();
+                calculateTotalDisponibleMamparas();
+            }
+        }
+
+        /**
+         * Fetches unique dropdown options from Apps Script.
+         * @param {string} fieldName - The name of the field to fetch options for (e.g., 'Región', 'Empresa', 'Nombre de Delegado').
+         * @param {HTMLSelectElement} selectElement - The HTML select element to populate.
+         * @param {string} loadingMessage - Message to display while loading.
+         * @param {Object} [filterParams] - Optional parameters to filter the results (e.g., { region: 'TCMC' }).
+         */
+        async function fetchDropdownOptions(fieldName, selectElement, loadingMessage, filterParams = {}) {
+            selectElement.innerHTML = `<option value="">${loadingMessage}</option>`;
+            selectElement.disabled = true;
+
+            let fetchUrl = `${GOOGLE_APPS_SCRIPT_URL}?type=dropdown&field=${encodeURIComponent(fieldName)}`;
+            // Add filter parameters if they exist
+            for (const key in filterParams) {
+                if (filterParams.hasOwnProperty(key)) {
+                    fetchUrl += `&${encodeURIComponent(key)}=${encodeURIComponent(filterParams[key])}`;
+                }
+            }
+
+            try {
+                const response = await fetch(fetchUrl);
+                const result = await response.json();
+
+                if (result.status === 'success' && Array.isArray(result.data)) {
+                    selectElement.innerHTML = `<option value="">Selecciona ${fieldName.toLowerCase().replace(' de ', ' del ').replace(' del delegado', ' el delegado')}</option>`;
+                    result.data.forEach(option => {
+                        const opt = document.createElement('option');
+                        opt.value = option;
+                        opt.textContent = option;
+                        selectElement.appendChild(opt);
+                    });
+                } else {
+                    console.error(`Error fetching ${fieldName} options:`, result.message);
+                    selectElement.innerHTML = `<option value="">Error al cargar ${fieldName.toLowerCase().replace(' de ', ' del ').replace(' del delegado', ' el delegado')}</option>`;
+                    showModal('Error de Carga', `No se pudieron cargar las opciones para ${fieldName}.`, 'error');
+                }
+            } catch (error) {
+                console.error(`Network error fetching ${fieldName} options:`, error);
+                selectElement.innerHTML = `<option value="">Error de red al cargar ${fieldName.toLowerCase().replace(' de ', ' del ').replace(' del delegado', ' el delegado')}</option>`;
+                showModal('Error de Red', `No se pudo conectar para cargar las opciones de ${fieldName}. Asegúrate de tener conexión a internet.`, 'error');
+            } finally {
+                selectElement.disabled = false;
+            }
+        }
+
+        // Event listener for region change to filter delegate names
+        regionSelect.addEventListener('change', () => {
+            const selectedRegion = regionSelect.value;
+            if (selectedRegion) {
+                fetchDropdownOptions('Nombre de Delegado', nombreDelegadoSelect, 'Cargando delegados...', { region: selectedRegion });
+            } else {
+                // If no region is selected, reset delegate dropdown
+                nombreDelegadoSelect.innerHTML = '<option value="">Selecciona una región primero</option>';
+                nombreDelegadoSelect.disabled = true;
+            }
+            fetchInitialInventory(); // Also update inventory based on new region
+        });
+
+        // Event listener for empresa change (already existed)
+        empresaSelect.addEventListener('change', () => {
+            if (empresaSelect.value === 'Bancoppel') {
+                mamparasSection.classList.remove('hidden');
+                mamparasInicialInput.setAttribute('required', 'true');
+                mamparasExtraviadasInput.setAttribute('required', 'true');
+                mamparasDañadasInput.setAttribute('required', 'true');
+            } else {
+                mamparasSection.classList.add('hidden');
+                mamparasInicialInput.removeAttribute('required');
+                mamparasExtraviadasInput.removeAttribute('required');
+                mamparasDañadasInput.removeAttribute('required');
+                mamparasInicialInput.value = '';
+                mamparasExtraviadasInput.value = '';
+                mamparasDañadasInput.value = '';
+                totalDisponibleMamparasDisplay.textContent = '0';
+            }
+            fetchInitialInventory(); // Also update inventory based on new company selection
+        });
+
+        // Event listener for "Start Capture" button (from intro page)
+        startButton.addEventListener('click', () => {
+            introPage.style.display = 'none'; 
+            formContainer.classList.remove('hidden'); 
+            formSection1.classList.remove('hidden'); 
+            formSection2.classList.add('hidden');   
+            summarySection.classList.add('hidden'); 
+            dynamicSubtitle.textContent = 'Sindicato financiero - Datos del Trabajador'; 
+            dynamicSubtitle.classList.remove('mb-2'); 
+            dynamicSubtitle.classList.add('mb-6');
+            
+            // Clear and then fetch initial inventory when starting capture
+            totalUrnasInput.value = '';
+            mamparasInicialInput.value = '';
+            existenciaActualUrnasDisplay.textContent = '0';
+            totalDisponibleMamparasDisplay.textContent = '0';
+            
+            checkUrlAndButton(); 
+            // Fetch initial dropdown options when starting (only regions and companies)
+            fetchDropdownOptions('Región', regionSelect, 'Cargando regiones...');
+            fetchDropdownOptions('Empresa', empresaSelect, 'Cargando empresas...');
+            
+            // Nombre de Delegado will be loaded when region is selected
+            nombreDelegadoSelect.innerHTML = '<option value="">Selecciona una región primero</option>';
+            nombreDelegadoSelect.disabled = true;
+        });
+
+        // Event listener for "Back" button in section 1 of the form
+        backButtonSection1.addEventListener('click', () => {
+            formContainer.classList.add('hidden');
+            formSection1.classList.add('hidden');
+            introPage.style.display = 'flex'; 
+        });
+
+        // Event listener for "Next" button (in section 1)
+        nextButtonSection1.addEventListener('click', () => {
+            const bimestre = document.getElementById('bimestre'); 
+            const fechaInventario = document.getElementById('fechaInventario');
+            const region = document.getElementById('region');
+            const empresa = document.getElementById('empresa');
+            const nombreDelegado = document.getElementById('nombreDelegado');
+
+            if (!bimestre.value || !fechaInventario.value || !region.value || !empresa.value || !nombreDelegado.value.trim()) {
+                section1ErrorMessage.classList.remove('hidden');
+                return;
+            } else {
+                section1ErrorMessage.classList.add('hidden');
+            }
+
+            formSection1.classList.add('hidden');    
+            formSection2.classList.remove('hidden'); 
+            dynamicSubtitle.textContent = 'Confirmación de Datos de Urnas y Mamparas'; 
+            dynamicSubtitle.classList.remove('mb-6'); 
+            dynamicSubtitle.classList.add('mb-2');
+
+            // Fetch initial inventory only after company and region are selected
+            fetchInitialInventory();
+        });
+
+        // Event listener for "Back" button in section 2 of the form
+        backButtonSection2.addEventListener('click', () => {
+            formSection2.classList.add('hidden'); 
+            formSection1.classList.remove('hidden'); 
+            dynamicSubtitle.textContent = 'Sindicato financiero - Datos del Trabajador'; 
+            dynamicSubtitle.classList.remove('mb-2'); 
+            dynamicSubtitle.classList.add('mb-6');
+        });
+
+        // Event listener for "Next" button (`nextButtonSection2`) in section 2
+        nextButtonSection2.addEventListener('click', () => {
+            const urnasDañadas = document.getElementById('urnasDañadas');
+            const traspasosRecibidos = document.getElementById('traspasosRecibidos');
+            const traspasosRealizados = document.getElementById('traspasosRealizados');
+            const urnasExtraviadas = document.getElementById('urnasExtraviadas');
+            const urnasRecuperadas = document.getElementById('urnasRecuperadas');
+            const nuevasEntradas = document.getElementById('nuevasEntradas');
+
+            // Basic validation for numeric urn fields (editable ones)
+            if (urnasDañadas.value === '' || traspasosRecibidos.value === '' ||
+                traspasosRealizados.value === '' || urnasExtraviadas.value === '' || 
+                urnasRecuperadas.value === '' || nuevasEntradas.value === '') {
+                showModal('Campos Incompletos', 'Por favor, completa todos los campos numéricos de urnas antes de continuar.', 'error');
+                return;
+            }
+
+            // Validation for partition fields if the section is visible
+            const isMamparasSectionVisible = !mamparasSection.classList.contains('hidden');
+            if (isMamparasSectionVisible) {
+                const mamparasExtraviadas = document.getElementById('mamparasExtraviadas');
+                const mamparasDañadas = document.getElementById('mamparasDañadas');
+
+                if (mamparasExtraviadas.value === '' || mamparasDañadas.value === '') {
+                    showModal('Campos Incompletos', 'Por favor, completa todos los campos numéricos de mamparas antes de continuar.', 'error');
+                    return;
+                }
+            }
+
+            // Collect all form data from both sections
+            allFormData = {};
+            const formElements = inventoryForm.elements;
+            for (let i = 0; i < formElements.length; i++) {
+                const element = formElements[i];
+                if (element.name && element.type !== 'button') {
+                    if (!isMamparasSectionVisible && element.closest('#mamparasSection')) {
+                        continue; 
+                    }
+
+                    // For file inputs, we now store the Base64 data
+                    if (element.type === 'file') {
+                        if (element.id === 'portadaUrnas') {
+                            allFormData[element.name] = portadaUrnasBase64 || ''; // Use Base64 string
+                        } else if (element.id === 'fotoUrnas') {
+                            allFormData[element.name] = fotoUrnasBase64 || ''; // Use Base64 string
+                        }
+                    } else {
+                        allFormData[element.name] = element.value;
+                    }
+                }
+            }
+            allFormData['Total disponible (Urnas)'] = existenciaActualUrnasDisplay.textContent; 
+            if (isMamparasSectionVisible) {
+                allFormData['Total disponible (Mamparas)'] = totalDisponibleMamparasDisplay.textContent; 
+            }
+
+            // Pass the mamparas section visibility state to displaySummary
+            displaySummary(allFormData, isMamparasSectionVisible); 
+            formSection2.classList.add('hidden'); 
+            summarySection.classList.remove('hidden'); 
+            dynamicSubtitle.textContent = 'Resumen para Guardar'; 
+            dynamicSubtitle.classList.remove('mb-6'); 
+            dynamicSubtitle.classList.add('mb-2');
+        });
+
+        // Event listeners to open camera via custom button
+        openPortadaUrnasCameraButton.addEventListener('click', () => {
+            portadaUrnasInput.click(); 
+        });
+
+        openFotoUrnasCameraButton.addEventListener('click', () => {
+            fotoUrnasInput.click(); 
+        });
+
+        // Event listeners to update file name display and read file as Base64
+        portadaUrnasInput.addEventListener('change', (event) => {
+            if (event.target.files.length > 0) {
+                const file = event.target.files[0];
+                portadaUrnasFileNameSpan.textContent = file.name;
+                readFileAsBase64(file, (base64) => {
+                    portadaUrnasBase64 = base64;
+                });
+            } else {
+                portadaUrnasFileNameSpan.textContent = 'No se ha seleccionado archivo.';
+                portadaUrnasBase64 = '';
+            }
+        });
+
+        fotoUrnasInput.addEventListener('change', (event) => {
+            if (event.target.files.length > 0) {
+                const file = event.target.files[0];
+                fotoUrnasFileNameSpan.textContent = file.name;
+                readFileAsBase64(file, (base64) => {
+                    fotoUrnasBase64 = base64;
+                });
+            } else {
+                fotoUrnasFileNameSpan.textContent = 'No se ha seleccionado archivo.';
+                fotoUrnasBase64 = '';
+            }
+        });
+
+        // Event listener for "Save Data" button (on the summary page)
+        saveDataButton.addEventListener('click', async () => {
+            // Disable the button and show loading message immediately
+            saveDataButton.disabled = true;
+            responseMessage.classList.remove('hidden');
+            responseMessage.classList.remove('success-message', 'error-message');
+            responseMessage.textContent = 'Enviando datos...';
+            responseMessage.style.color = '#5B6384'; 
+
+            if (GOOGLE_APPS_SCRIPT_URL === 'PEGA_TU_URL_DE_APLICACION_WEB_AQUI' || !GOOGLE_APPS_SCRIPT_URL.startsWith('http')) {
+                console.error("Google Apps Script URL not configured or invalid.");
+                showModal('Error de Configuración', 'La URL de Google Apps Script no ha sido configurada correctamente. Contacta al administrador.', 'error');
+                // Re-enable the button on error
+                saveDataButton.disabled = false;
+                responseMessage.classList.add('hidden'); // Hide loading message
+                return;
+            }
+
+            try {
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Essential for Google Apps Script Web App POST requests
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(allFormData), 
+                });
+
+                // Clear loading message and show success modal
+                responseMessage.textContent = ''; 
+                showModal('¡Datos Registrados con Éxito!', 'La información ha sido guardada correctamente.', 'success');
+
+                // Reset form after successful submission
+                inventoryForm.reset();
+                existenciaActualUrnasDisplay.textContent = '0';
+                totalDisponibleMamparasDisplay.textContent = '0'; 
+                portadaUrnasFileNameSpan.textContent = 'No se ha seleccionado archivo.';
+                fotoUrnasFileNameSpan.textContent = 'No se ha seleccionado archivo.';
+                portadaUrnasBase64 = ''; // Clear Base64 data
+                fotoUrnasBase64 = ''; // Clear Base64 data
+                summarySection.classList.add('hidden'); 
+                introPage.style.display = 'flex'; 
+                formContainer.classList.add('hidden'); 
+                dynamicSubtitle.textContent = 'Sindicato financiero - Datos del Trabajador'; 
+                dynamicSubtitle.classList.remove('mb-2'); 
+                dynamicSubtitle.classList.add('mb-6');
+                mamparasSection.classList.add('hidden'); 
+                // Re-fetch dropdown options to reset them
+                fetchDropdownOptions('Región', regionSelect, 'Cargando regiones...');
+                fetchDropdownOptions('Empresa', empresaSelect, 'Cargando empresas...');
+                // Reset delegate dropdown as well
+                nombreDelegadoSelect.innerHTML = '<option value="">Selecciona una región primero</option>';
+                nombreDelegadoSelect.disabled = true;
+
+            } catch (error) {
+                console.error('Error al enviar los datos:', error);
+                responseMessage.textContent = ''; 
+                showModal('Error al Registrar Datos', 'Hubo un problema al intentar guardar la información. Por favor, inténtalo de nuevo.', 'error');
+            } finally {
+                // Always re-enable the button and hide loading message
+                saveDataButton.disabled = false;
+                responseMessage.classList.add('hidden');
+            }
+        });
+
+        /**
+         * Displays a summary of captured data.
+         * @param {object} data - The captured data to display in the summary.
+         * @param {boolean} showMamparas - Whether the mamparas section was visible in the form.
+         */
+        function displaySummary(data, showMamparas) {
+            summaryContent.innerHTML = ''; // Clear previous content
+
+            // Helper function to create a grid item
+            const createGridItem = (label, value, isDelegado = false) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('summary-grid-item');
+                if (isDelegado) {
+                    itemDiv.classList.add('summary-delegado-full-width');
+                }
+                const labelSpan = document.createElement('span');
+                labelSpan.classList.add('label');
+                labelSpan.textContent = label + ':';
+                const valueSpan = document.createElement('span');
+                valueSpan.classList.add('value');
+                // Handle file names vs. "Imagen lista para cargar"
+                if (label.includes('(Archivo)')) {
+                    valueSpan.textContent = value ? 'Imagen lista para cargar' : 'No se ha seleccionado imagen.';
+                    valueSpan.style.whiteSpace = 'nowrap'; 
+                    valueSpan.style.overflow = 'hidden';
+                    valueSpan.style.textOverflow = 'ellipsis';
+                } else {
+                    valueSpan.textContent = value;
+                }
+                itemDiv.appendChild(labelSpan);
+                itemDiv.appendChild(valueSpan);
+                return itemDiv;
+            };
+
+            // Helper function to create a highlighted total item
+            const createTotalItem = (label, value) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('summary-grid-item', 'highlight-total');
+                const labelSpan = document.createElement('span');
+                labelSpan.classList.add('label');
+                labelSpan.textContent = label; // No colon here as it's a title
+                const valueSpan = document.createElement('span');
+                valueSpan.classList.add('value');
+                valueSpan.textContent = value;
+                itemDiv.appendChild(labelSpan);
+                itemDiv.appendChild(valueSpan);
+                return itemDiv;
+            };
+
+            // --- Sección: Datos del Trabajador ---
+            const workerSection = document.createElement('div');
+            workerSection.classList.add('summary-category-section');
+            workerSection.innerHTML = '<h4 class="summary-category-title">Datos del Trabajador</h4><div class="summary-grid"></div>';
+            const workerGrid = workerSection.querySelector('.summary-grid');
+            workerGrid.appendChild(createGridItem('Bimestre', data['Bimestre']));
+            workerGrid.appendChild(createGridItem('Fecha de inventario', data['Fecha de inventario']));
+            workerGrid.appendChild(createGridItem('Región', data['Región']));
+            workerGrid.appendChild(createGridItem('Empresa', data['Empresa']));
+            // Pass true for isDelegado to apply specific styling
+            workerGrid.appendChild(createGridItem('Nombre de Delegado', data['Nombre de Delegado'], true)); 
+            summaryContent.appendChild(workerSection);
+
+            // --- Sección: Inventario de Urnas ---
+            const urnsSection = document.createElement('div');
+            urnsSection.classList.add('summary-category-section');
+            urnsSection.innerHTML = '<h4 class="summary-category-title">Inventario de Urnas</h4><div class="summary-grid"></div>';
+            const urnsGrid = urnsSection.querySelector('.summary-grid');
+            urnsGrid.appendChild(createGridItem('Total de urnas (Inicial)', data['Total de urnas']));
+            urnsGrid.appendChild(createGridItem('Urnas dañadas', data['Urnas dañadas y/o incompletas']));
+            urnsGrid.appendChild(createGridItem('Traspasos recibidos', data['Traspasos recibidos']));
+            urnsGrid.appendChild(createGridItem('Traspasos realizados', data['Traspasos realizados']));
+            urnsGrid.appendChild(createGridItem('Urnas extravíadas', data['Urnas extravíadas']));
+            urnsGrid.appendChild(createGridItem('Urnas recuperadas', data['Urnas recuperadas']));
+            urnsGrid.appendChild(createGridItem('Nuevas entradas', data['Nuevas entradas']));
+            // Add the highlighted total for urns
+            urnsGrid.appendChild(createTotalItem('Existencia Actual Urnas', data['Total disponible (Urnas)']));
+            summaryContent.appendChild(urnsSection);
+
+            // --- Sección: Inventario de Mamparas (condicional) ---
+            if (showMamparas) {
+                const mamparasSummarySection = document.createElement('div');
+                mamparasSummarySection.classList.add('summary-category-section');
+                mamparasSummarySection.innerHTML = '<h4 class="summary-category-title">Inventario de Mamparas</h4><div class="summary-grid"></div>';
+                const mamparasGrid = mamparasSummarySection.querySelector('.summary-grid');
+                mamparasGrid.appendChild(createGridItem('Inventario inicial (Mamparas)', data['Mamparas - Inventario inicial']));
+                mamparasGrid.appendChild(createGridItem('Mamparas extravíadas', data['Mamparas - Extraviadas']));
+                mamparasGrid.appendChild(createGridItem('Mamparas dañadas', data['Mamparas - Dañadas e incompletas']));
+                // Add the highlighted total for mamparas
+                mamparasGrid.appendChild(createTotalItem('Total Disponible Mamparas', data['Total disponible (Mamparas)']));
+                summaryContent.appendChild(mamparasSummarySection);
+            }
+
+            // --- Nueva Sección: Fotos o Archivos Cargados ---
+            const fileUploadsSection = document.createElement('div');
+            fileUploadsSection.classList.add('summary-category-section');
+            fileUploadsSection.innerHTML = '<h4 class="summary-category-title">Fotos o Archivos Cargados</h4><div class="summary-grid"></div>';
+            const fileUploadsGrid = fileUploadsSection.querySelector('.summary-grid');
+            fileUploadsGrid.appendChild(createGridItem('Portada (Archivo)', data['Portada de urnas y mamparas (Archivo)']));
+            fileUploadsGrid.appendChild(createGridItem('Foto Material (Archivo)', data['Foto de Urnas y mamparas (Archivo)']));
+            summaryContent.appendChild(fileUploadsSection);
+        }
+
+        // Event listener for "Modify Data" button (on the summary section)
+        modifyDataButton.addEventListener('click', () => {
+            summarySection.classList.add('hidden');
+            inventoryForm.classList.remove('hidden');
+            responseMessage.classList.add('hidden'); 
+            formSection1.classList.remove('hidden'); 
+            formSection2.classList.add('hidden');   
+            dynamicSubtitle.textContent = 'Sindicato financiero - Datos del Trabajador'; 
+            dynamicSubtitle.classList.remove('mb-2'); 
+            dynamicSubtitle.classList.add('mb-6');
+            if (empresaSelect.value === 'Bancoppel') {
+                mamparasSection.classList.remove('hidden');
+                mamparasInicialInput.setAttribute('required', 'true');
+                mamparasExtraviadasInput.setAttribute('required', 'true');
+                mamparasDañadasInput.setAttribute('required', 'true');
+            } else {
+                mamparasSection.classList.add('hidden');
+                mamparasInicialInput.removeAttribute('required');
+                mamparasExtraviadasInput.removeAttribute('required');
+                mamparasDañadasInput.removeAttribute('required');
+            }
+        });
+
+        // Initial check when the script loads
+        checkUrlAndButton();
+    </script>
+</body>
+</html>
